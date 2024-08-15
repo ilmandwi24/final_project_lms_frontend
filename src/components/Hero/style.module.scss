@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    padding-top: 100px;
+    padding-bottom: 75px;
+    .description {
+        flex-basis: 50%;
+        padding-right:18px;
+        padding-left:18px;
+        padding-top: 25px;
+        // background-color: antiquewhite;
+        }
+    .illustration {
+        flex-basis: 50%;
+    }
+}

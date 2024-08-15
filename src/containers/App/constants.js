@@ -6,3 +6,7 @@ export const SET_DATA = 'App/SET_DATA';
 export const GET_DATA = 'App/GET_DATA';
 export const GET_COUNTRY_LIST = 'App/GET_COUNTRY_LIST';
 export const SET_COUNTRY_LIST = 'App/SET_COUNTRY_LIST';
+export const SET_USER = 'App/SET_USER';
+export const GET_COURSES_BY_INSTRUCTOR = 'App/GET_COURSES_BY_INSTRUCTOR';
+export const SET_COURSES_BY_INSTRUCTOR = 'App/SET_COURSES_BY_INSTRUCTOR';
+export const ADD_COURSE = 'App/ADD_COURSE';

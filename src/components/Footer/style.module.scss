@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 20px;
+    color: white;
+    .copyright {
+        display: flex;
+        gap: 0.5rem;
+        text-align: center;
+        align-items: center;
+    }
+    .icon {
+        display: flex;
+        gap: 0.5rem;
+        text-align: center;
+        align-items: center;
+    }
+    h2 {
+       text-align: center;
+    }
+}

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
+import dotenv from 'dotenv';
 
 // https://vitejs.dev/config/
 export default ({ mode }) =>
@@ -44,6 +45,7 @@ export default ({ mode }) =>
     define: {
       'process.env': {
         NODE_ENV: mode,
+        API_URL: process.env.API_URL,
       },
     },
   });

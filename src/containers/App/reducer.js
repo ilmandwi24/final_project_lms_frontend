@@ -1,6 +1,15 @@
 import { produce } from 'immer';
 
-import { SET_LOCAL, SET_THEME, SET_POPUP, SET_LOADING, SET_DATA, SET_COUNTRY_LIST } from '@containers/App/constants';
+import {
+  SET_LOCAL,
+  SET_THEME,
+  SET_POPUP,
+  SET_LOADING,
+  SET_DATA,
+  SET_COUNTRY_LIST,
+  SET_USER,
+  SET_COURSES_BY_INSTRUCTOR,
+} from '@containers/App/constants';
 
 export const initialState = {
   locale: 'en',
@@ -13,9 +22,11 @@ export const initialState = {
   data: [],
   loading: false,
   countryList: [],
+  user: {},
+  coursesByInstructor: [],
 };
 
-export const storedKey = ['locale', 'theme'];
+export const storedKey = ['locale', 'theme', 'user'];
 
 const appReducer = (state = initialState, action) =>
   produce(state, (draft) => {
@@ -37,6 +48,12 @@ const appReducer = (state = initialState, action) =>
         break;
       case SET_COUNTRY_LIST:
         draft.countryList = action.countryList;
+        break;
+      case SET_USER:
+        draft.user = action.user;
+        break;
+      case SET_COURSES_BY_INSTRUCTOR:
+        draft.coursesByInstructor = action.courses;
         break;
     }
   });

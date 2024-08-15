@@ -40,7 +40,6 @@ const ClientRoutes = () => {
         });
       }
     });
-
     return routeList;
   };
 
