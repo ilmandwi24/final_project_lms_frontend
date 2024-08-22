@@ -6,7 +6,7 @@ const Hero = () => (
   <div className={classes.container}>
     <div className={classes.description}>
       <h2>Best Online Course</h2>
-      <p>Best place online course in kebayoran. Connect student with lecturer</p>
+      <p>Best place online course to create or learn new skills. Connect student with instructor</p>
       <Button variant="contained">Explore</Button>
     </div>
     <div className={classes.illustration}>

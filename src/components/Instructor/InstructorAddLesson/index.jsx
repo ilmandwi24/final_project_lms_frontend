@@ -3,34 +3,33 @@ import { Box, Button, FormControl, Input, InputLabel, TextField } from '@mui/mat
 import Editor from 'react-simple-wysiwyg';
 import { useState } from 'react';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { selectUser } from '@containers/App/selectors';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect, useDispatch } from 'react-redux';
-import { addCourse } from '@containers/App/actions';
+import { addLesson, getCoursesByInstructor } from '@containers/App/actions';
 import classes from './style.module.scss';
 
 const ariaLabel = { 'aria-label': 'description' };
 
-const InstructorAddCourse = ({ user }) => {
+const InstructorAddLesson = ({ user }) => {
   const [name, setName] = useState('');
-  const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [submit, setSubmit] = useState(false);
   const urlHost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : process.env.API_HOST;
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const params = useParams();
+  console.log(params.id);
   function onChangeEditor(e) {
     setDescription(e.target.value);
   }
 
   function onChangeName(e) {
     setName(e.target.value);
-  }
-  function onChangePrice(e) {
-    setPrice(e.target.value);
   }
 
   function onSubmit(e) {
@@ -40,50 +39,29 @@ const InstructorAddCourse = ({ user }) => {
 
     const payload = {
       name,
-      description,
-      price,
-      instructorId: user.id,
+      content: description,
     };
 
     dispatch(
-      addCourse(payload, (response) => {
+      addLesson(params.id, payload, (response) => {
         console.log(response);
         setSubmit(false);
-        navigate(`/dashboard/instructor`);
+        navigate(`/dashboard/instructor/courses/${params.id}/lessons`);
       })
     );
-    // axios
-    //   .post(`${urlHost}/api/courses/add`, payload, { headers })
-    //   .then((r) => {
-    //     setSubmit(false);
-    //     // setValidationErrors({});
-    //     console.log(r);
-    //     // const userData = {
-    //     //   email: r.data.data.email,
-    //     //   name: r.data.data.name,
-    //     //   token: r.data.data.token,
-    //     // };
-    //     // dispatch(setUser(userData));
-    //     // dispatch(setLogin(true));
-    //     // setNotif({ success: 'login success' });
-    //     // // localStorage.setItem('token', r.data.token);
-    //     // navigate('/dashboard/profile');
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     setSubmit(false);
-    //     if (error.response.data.error !== undefined) {
-    //       // setValidationErrors({ message: error.response.data.message });
-    //       // console;
-    //       console.log(error.response);
-    //     }
-    //   });
-    // console.log(name, description);
+
+    console.log(name, description);
   }
   return (
     <form className={classes.container} onSubmit={(e) => onSubmit(e)}>
       <Box sx={{ textAlign: 'left', marginBottom: '1rem' }}>
-        <Link to="/dashboard/instructor">
+        <Link
+          to=".."
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(-1);
+          }}
+        >
           <Button size="small" variant="outlined" startIcon={<KeyboardBackspaceIcon />}>
             Back
           </Button>
@@ -92,15 +70,15 @@ const InstructorAddCourse = ({ user }) => {
       <div className={classes.formCover}>
         <div className={classes.cover}>
           <label id="add-img-label" htmlFor="add-single-img">
-            Add Cover
+            Add Video Lesson
           </label>
         </div>
         <div className={classes.name}>
           <label htmlFor="courseName">
-            Course Name
+            Lesson Name
             <br />
             <Input
-              placeholder="Javascript - From Hero to Zero  "
+              placeholder="Contoh: Syntax Javascript"
               inputProps={ariaLabel}
               id="courseName"
               fullWidth
@@ -111,18 +89,17 @@ const InstructorAddCourse = ({ user }) => {
           </label>
         </div>
       </div>
-      <div className={classes.price}>
+      {/* <div className={classes.price}>
         <label htmlFor="coursePrice">Price</label>
         <Input
-          defaultValue="0"
-          value={price}
+          defaultValue="Hello world"
           inputProps={ariaLabel}
           type="number"
           id="coursePrice"
           onChange={(e) => onChangePrice(e)}
           required
         />
-      </div>
+      </div> */}
       <div className={classes.description}>
         <label htmlFor="courseDescription">Description</label>
         <Editor
@@ -139,10 +116,10 @@ const InstructorAddCourse = ({ user }) => {
     </form>
   );
 };
-InstructorAddCourse.propTypes = {
+InstructorAddLesson.propTypes = {
   user: PropTypes.object,
 };
 const mapStateToProps = createStructuredSelector({
   user: selectUser,
 });
-export default connect(mapStateToProps)(InstructorAddCourse);
+export default connect(mapStateToProps)(InstructorAddLesson);

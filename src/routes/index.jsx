@@ -10,6 +10,11 @@ import Instructor from '@components/Instructor';
 import AdminLayout from '@layouts/AdminLayout';
 import Student from '@components/Student';
 import InstructorAddCourse from '@components/Instructor/InstructorAddCourse';
+import InstructorLesson from '@components/Instructor/InstructorLesson';
+import InstructorAddLesson from '@components/Instructor/InstructorAddLesson';
+import InstructorEditLesson from '@components/Instructor/InstructorEditLesson';
+import InstructorEditCourse from '@components/Instructor/InstructorEditCourse';
+import Cart from '@pages/Cart';
 // import Dashboard from '@pages/Dashboard';
 
 const routes = [
@@ -18,6 +23,13 @@ const routes = [
     name: 'Main',
     protected: false,
     component: Main,
+    layout: MainLayout,
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    protected: true,
+    component: Cart,
     layout: MainLayout,
   },
   {
@@ -95,11 +107,43 @@ const routes = [
   },
   {
     path: '/dashboard/instructor/add-course',
-    name: 'instructor',
+    name: 'instructor add course',
     layout: AdminLayout,
     protected: true,
 
     component: InstructorAddCourse,
+  },
+  {
+    path: '/dashboard/instructor/courses/:id/edit',
+    name: 'instructor editcourse',
+    layout: AdminLayout,
+    protected: true,
+
+    component: InstructorEditCourse,
+  },
+  {
+    path: '/dashboard/instructor/courses/:id/lessons',
+    name: 'instructor lesson',
+    layout: AdminLayout,
+    protected: true,
+
+    component: InstructorLesson,
+  },
+  {
+    path: '/dashboard/instructor/courses/:id/lessons/add',
+    name: 'instructor add lesson',
+    layout: AdminLayout,
+    protected: true,
+
+    component: InstructorAddLesson,
+  },
+  {
+    path: '/dashboard/instructor/courses/:courseId/lessons/:lessonId/edit',
+    name: 'instructor edit lesson',
+    layout: AdminLayout,
+    protected: true,
+
+    component: InstructorEditLesson,
   },
   {
     path: '/dashboard/student',

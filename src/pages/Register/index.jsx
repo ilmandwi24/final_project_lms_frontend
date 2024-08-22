@@ -76,7 +76,7 @@ const Register = () => {
     setIsSubmitting(true);
 
     const payload = {
-      nama: name,
+      name,
       email,
       password,
     };

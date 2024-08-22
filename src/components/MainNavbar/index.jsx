@@ -11,21 +11,31 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useState } from 'react';
-import { Stack } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Badge, Stack } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { selectUser } from '@containers/App/selectors';
+import { selectGetJumlahCart, selectUser } from '@containers/App/selectors';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 import { connect, useDispatch } from 'react-redux';
 import { setLogin } from '@containers/Client/actions';
-import { setUser } from '@containers/App/actions';
+import { getJumlahCartItem, setUser } from '@containers/App/actions';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import classes from './style.module.scss';
 import { auth } from '../../utils/firebaseHelper';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-const MainNavbar = ({ user }) => {
+function notificationsLabel(count) {
+  if (count === 0) {
+    return 'no notifications';
+  }
+  if (count > 99) {
+    return 'more than 99 notifications';
+  }
+  return `${count} notifications`;
+}
+const MainNavbar = ({ user, jumlahItemCart }) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
@@ -45,7 +55,6 @@ const MainNavbar = ({ user }) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log(user);
 
   const handleSignOut = () => {
     dispatch(setLogin(false));
@@ -53,6 +62,10 @@ const MainNavbar = ({ user }) => {
     auth.signOut();
     navigate('/login');
   };
+  useEffect(() => {
+    // console.log(user.id, '---user');
+    dispatch(getJumlahCartItem(user.id));
+  }, [dispatch]);
   return (
     <AppBar position="static" color="inherit" className={classes.navbar}>
       <Container maxWidth="xl">
@@ -138,7 +151,7 @@ const MainNavbar = ({ user }) => {
             ))} */}
           </Box>
 
-          <Stack sx={{ flexGrow: 0 }} spacing={1} direction="row">
+          <Stack sx={{ flexGrow: 0, alignItems: 'center' }} spacing={1} direction="row">
             {/* <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -168,6 +181,15 @@ const MainNavbar = ({ user }) => {
             </Menu> */}
             {user.token ? (
               <>
+                <Box sx={{ display: 'flex', alignItems: 'center', pr: 0.5 }}>
+                  <Link to="/cart">
+                    <IconButton aria-label={notificationsLabel(jumlahItemCart || 0)}>
+                      <Badge color="secondary" badgeContent={jumlahItemCart || 0}>
+                        <ShoppingCartIcon />
+                      </Badge>
+                    </IconButton>
+                  </Link>
+                </Box>
                 <Link to="/dashboard">
                   <Button variant="contained">Dashboard</Button>
                 </Link>
@@ -196,9 +218,11 @@ const MainNavbar = ({ user }) => {
 
 MainNavbar.propTypes = {
   user: PropTypes.object,
+  jumlahItemCart: PropTypes.any,
 };
 
 const mapStateToProps = createStructuredSelector({
   user: selectUser,
+  jumlahItemCart: selectGetJumlahCart,
 });
 export default connect(mapStateToProps)(MainNavbar);

@@ -1,27 +1,37 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Box, Button, FormControl, Input, InputLabel, TextField } from '@mui/material';
 import Editor from 'react-simple-wysiwyg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { selectUser } from '@containers/App/selectors';
+import { selectUser, selectCoursesByInstructor } from '@containers/App/selectors';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect, useDispatch } from 'react-redux';
-import { addCourse } from '@containers/App/actions';
+import { editCourse } from '@containers/App/actions';
 import classes from './style.module.scss';
 
 const ariaLabel = { 'aria-label': 'description' };
 
-const InstructorAddCourse = ({ user }) => {
+const InstructorEditCourse = ({ user, courses }) => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState('');
   const [submit, setSubmit] = useState(false);
   const urlHost = process.env.NODE_ENV !== 'production' ? 'http://localhost:8080' : process.env.API_HOST;
+  const params = useParams();
+  const course = courses.find((item) => item.id === Number(params.id) && item.instructor_id === user.id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    console.log(course, '---useEffect');
+    setName(course.name);
+    setDescription(course.description);
+    setPrice(course.price);
+    // setName(lesson.name);
+    // setDescription(lesson.content);
+  }, [course]);
   function onChangeEditor(e) {
     setDescription(e.target.value);
   }
@@ -46,39 +56,12 @@ const InstructorAddCourse = ({ user }) => {
     };
 
     dispatch(
-      addCourse(payload, (response) => {
+      editCourse(course.id, user.id, payload, (response) => {
         console.log(response);
         setSubmit(false);
         navigate(`/dashboard/instructor`);
       })
     );
-    // axios
-    //   .post(`${urlHost}/api/courses/add`, payload, { headers })
-    //   .then((r) => {
-    //     setSubmit(false);
-    //     // setValidationErrors({});
-    //     console.log(r);
-    //     // const userData = {
-    //     //   email: r.data.data.email,
-    //     //   name: r.data.data.name,
-    //     //   token: r.data.data.token,
-    //     // };
-    //     // dispatch(setUser(userData));
-    //     // dispatch(setLogin(true));
-    //     // setNotif({ success: 'login success' });
-    //     // // localStorage.setItem('token', r.data.token);
-    //     // navigate('/dashboard/profile');
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     setSubmit(false);
-    //     if (error.response.data.error !== undefined) {
-    //       // setValidationErrors({ message: error.response.data.message });
-    //       // console;
-    //       console.log(error.response);
-    //     }
-    //   });
-    // console.log(name, description);
   }
   return (
     <form className={classes.container} onSubmit={(e) => onSubmit(e)}>
@@ -97,7 +80,7 @@ const InstructorAddCourse = ({ user }) => {
         </div>
         <div className={classes.name}>
           <label htmlFor="courseName">
-            Course Name
+            Edit Course Name
             <br />
             <Input
               placeholder="Javascript - From Hero to Zero  "
@@ -114,11 +97,11 @@ const InstructorAddCourse = ({ user }) => {
       <div className={classes.price}>
         <label htmlFor="coursePrice">Price</label>
         <Input
-          defaultValue="0"
-          value={price}
+          defaultValue="Hello world"
           inputProps={ariaLabel}
           type="number"
           id="coursePrice"
+          value={price}
           onChange={(e) => onChangePrice(e)}
           required
         />
@@ -133,16 +116,18 @@ const InstructorAddCourse = ({ user }) => {
       </div>
       <Box sx={{ textAlign: 'right', marginTop: '1rem' }}>
         <Button variant="contained" type="submit" disabled={submit} sx={{ textTransform: 'none' }}>
-          {submit ? 'Submitting...' : 'Submit'}
+          {submit ? 'Updating' : 'Update'}
         </Button>
       </Box>
     </form>
   );
 };
-InstructorAddCourse.propTypes = {
+InstructorEditCourse.propTypes = {
   user: PropTypes.object,
+  courses: PropTypes.array,
 };
 const mapStateToProps = createStructuredSelector({
   user: selectUser,
+  courses: selectCoursesByInstructor,
 });
-export default connect(mapStateToProps)(InstructorAddCourse);
+export default connect(mapStateToProps)(InstructorEditCourse);

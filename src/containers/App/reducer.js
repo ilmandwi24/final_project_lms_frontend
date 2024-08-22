@@ -9,6 +9,16 @@ import {
   SET_COUNTRY_LIST,
   SET_USER,
   SET_COURSES_BY_INSTRUCTOR,
+  SET_LESSONS_BY_COURSE,
+  DELETE_LESSON,
+  DELETE_LESSON_STATE,
+  DELETE_COURSE,
+  GET_COURSES_HOME,
+  SET_COURSES_HOME,
+  GET_JUMLAH_CART,
+  SET_JUMLAH_CART,
+  SET_CART_ITEMS,
+  SET_TOKEN_MIDTRANS,
 } from '@containers/App/constants';
 
 export const initialState = {
@@ -24,9 +34,24 @@ export const initialState = {
   countryList: [],
   user: {},
   coursesByInstructor: [],
+  lessonsByCourse: [],
+  coursesHome: [],
+  jumlahCartItem: 0,
+  cartItems: {},
+  token: '',
 };
 
-export const storedKey = ['locale', 'theme', 'user'];
+export const storedKey = [
+  'locale',
+  'theme',
+  'user',
+  'coursesByInstructor',
+  'lessonsByCourse',
+  'coursesHome',
+  'jumlahCartItem',
+  'cartItems',
+  'token',
+];
 
 const appReducer = (state = initialState, action) =>
   produce(state, (draft) => {
@@ -52,8 +77,37 @@ const appReducer = (state = initialState, action) =>
       case SET_USER:
         draft.user = action.user;
         break;
+      case SET_COURSES_HOME:
+        draft.coursesHome = action.courses;
+        break;
       case SET_COURSES_BY_INSTRUCTOR:
         draft.coursesByInstructor = action.courses;
+        break;
+      case SET_LESSONS_BY_COURSE:
+        draft.lessonsByCourse = action.lessons;
+        break;
+      case DELETE_LESSON:
+        console.log(action, 'action');
+        draft.lessonsByCourse = draft.lessonsByCourse.filter(
+          (lesson) => lesson.id !== action.lessonId && lesson.courseId !== action.courseId
+        );
+        // draft.lessonsByCourse = draft.lessonsByCourse.filter((lesson) => lesson.id !== action.lessonId);
+        break;
+      case DELETE_COURSE:
+        draft.coursesByInstructor = draft.coursesByInstructor.filter(
+          (course) => course.id !== action.courseId && course.instructorId !== action.instructorId
+        );
+        break;
+      case SET_JUMLAH_CART:
+        // console.log(action, 'action');
+        draft.jumlahCartItem = action.jumlah;
+        break;
+      case SET_CART_ITEMS:
+        draft.cartItems = action.cartItems;
+        break;
+      case SET_TOKEN_MIDTRANS:
+        // console.log(action, 'action');
+        draft.token = action.token;
         break;
     }
   });

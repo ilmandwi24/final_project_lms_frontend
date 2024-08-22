@@ -11,3 +11,8 @@ export const selectData = createSelector(selectAppState, (state) => state.data);
 export const selectCountryList = createSelector(selectAppState, (state) => state.countryList);
 export const selectUser = createSelector(selectAppState, (state) => state.user);
 export const selectCoursesByInstructor = createSelector(selectAppState, (state) => state.coursesByInstructor);
+export const selectCoursesHome = createSelector(selectAppState, (state) => state.coursesHome);
+export const selectLessonsByCourse = createSelector(selectAppState, (state) => state.lessonsByCourse);
+export const selectGetJumlahCart = createSelector(selectAppState, (state) => state.jumlahCartItem);
+export const selectCartItems = createSelector(selectAppState, (state) => state.cartItems);
+export const selectTokenMidtrans = createSelector(selectAppState, (state) => state.token);
