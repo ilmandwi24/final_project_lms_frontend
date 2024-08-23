@@ -4,10 +4,11 @@ import { createStructuredSelector } from 'reselect';
 import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import mainCourse from '@static/images/main-course.png';
 import styled from '@emotion/styled';
-import { selectCoursesHome } from '@containers/App/selectors';
+import { selectCoursesHome, selectUser } from '@containers/App/selectors';
 import { useEffect } from 'react';
-import { getCoursesHome } from '@containers/App/actions';
+import { addCourseToCart, getCoursesHome } from '@containers/App/actions';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { useNavigate } from 'react-router-dom';
 import classes from './style.module.scss';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -33,9 +34,9 @@ const formatCurrencyWithoutPrefix = (amount) => {
   return formatted.replace('Rp', '').trim();
 };
 
-const MainCourses = ({ courses }) => {
+const MainCourses = ({ user, courses }) => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getCoursesHome());
   }, [dispatch]);
@@ -43,6 +44,17 @@ const MainCourses = ({ courses }) => {
   useEffect(() => {
     console.log(courses, 'baru');
   }, [courses]);
+
+  const handleAddToCart = (courseId) => {
+    // console.log(user.cart_id);
+    const data = {
+      cartId: user.cart_id,
+      courseId,
+      // course_Id2: courseId,
+    };
+    dispatch(addCourseToCart(data));
+    navigate('/');
+  };
   return (
     <div className={classes.container}>
       <h2 className={classes.title}>Courses you can take</h2>
@@ -63,7 +75,9 @@ const MainCourses = ({ courses }) => {
                   {`Rp. ${formatCurrencyWithoutPrefix(course.price)}`}
                 </Typography>
                 <Box>
-                  <Button variant="contained">Add To Card</Button>
+                  <Button variant="contained" onClick={() => handleAddToCart(course.id)}>
+                    Add To Card
+                  </Button>
                 </Box>
               </Item>
             </Grid>
@@ -121,10 +135,12 @@ const MainCourses = ({ courses }) => {
 };
 
 MainCourses.propTypes = {
+  user: PropTypes.object,
   courses: PropTypes.array,
 };
 
 const mapStateToProps = createStructuredSelector({
+  user: selectUser,
   courses: selectCoursesHome,
 });
 

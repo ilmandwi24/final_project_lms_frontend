@@ -10,7 +10,6 @@ import MainNavbar from '@components/MainNavbar';
 const MainLayout = ({ children, locale, theme, intl: { formatMessage } }) => (
   <div>
     <MainNavbar />
-    {/* <Navbar title={formatMessage({ id: 'app_title_header' })} locale={locale} theme={theme} /> */}
     {children}
   </div>
 );

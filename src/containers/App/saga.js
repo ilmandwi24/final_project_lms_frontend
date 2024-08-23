@@ -15,6 +15,8 @@ import {
   getJumlahCart,
   getCartItems,
   getTokenMidtrans,
+  addCourseToCart,
+  deleteCourseFromCart,
 } from '@domain/api';
 import {
   showPopup,
@@ -29,6 +31,8 @@ import {
   setJumlahCartItem,
   setCartItems,
   setTokenMidtrans,
+  incrementCartItems,
+  decrementCartItems,
 } from '@containers/App/actions';
 import {
   GET_DATA,
@@ -45,6 +49,8 @@ import {
   GET_JUMLAH_CART,
   GET_CART_ITEMS,
   GET_TOKEN_MIDTRANS,
+  ADD_COURSE_TO_CART,
+  DELETE_COURSE_FROM_CART,
 } from '@containers/App/constants';
 
 function* doGetData() {
@@ -318,6 +324,57 @@ function* doGetTokenMidtrans({ payload }) {
   yield put(setLoading(false));
 }
 
+function* doAddCourseToCart({ payload }) {
+  yield put(setLoading(true));
+  // console.log(, '----saga');
+  try {
+    // console.log('--action');
+    // console.log(courseId, lessonId);
+    console.log(payload, '----payload');
+    const response = yield call(addCourseToCart, payload);
+    console.log(response, '----response');
+
+    if (response) {
+      console.log(response.data.token);
+      yield put(incrementCartItems());
+
+      yield put(setLoading(false));
+      // console.log(response.data.token, 'saga');
+      // yield put(setTokenMidtrans(response.data.token));
+    }
+  } catch (error) {
+    console.log(error, '-----');
+
+    yield put(showPopup());
+  }
+  yield put(setLoading(false));
+}
+function* doDeleteCourseFromCart({ cartId, courseId }) {
+  yield put(setLoading(true));
+  // console.log(, '----saga');
+  try {
+    // console.log('--action');
+    // console.log(courseId, lessonId);
+    // console.log(payload, '----payload');
+    const response = yield call(deleteCourseFromCart, cartId, courseId);
+    console.log(response, '----response');
+
+    if (response) {
+      console.log(response);
+      yield put(decrementCartItems());
+
+      yield put(setLoading(false));
+      // console.log(response.data.token, 'saga');
+      // yield put(setTokenMidtrans(response.data.token));
+    }
+  } catch (error) {
+    console.log(error, '-----');
+
+    yield put(showPopup());
+  }
+  yield put(setLoading(false));
+}
+
 export default function* appSaga() {
   yield takeLatest(GET_DATA, doGetData);
   yield takeLatest(GET_COUNTRY_LIST, doGetCountryList);
@@ -333,4 +390,6 @@ export default function* appSaga() {
   yield takeLatest(GET_JUMLAH_CART, doGetJumlahCart);
   yield takeLatest(GET_CART_ITEMS, doGetCartItems);
   yield takeLatest(GET_TOKEN_MIDTRANS, doGetTokenMidtrans);
+  yield takeLatest(ADD_COURSE_TO_CART, doAddCourseToCart);
+  yield takeLatest(DELETE_COURSE_FROM_CART, doDeleteCourseFromCart);
 }

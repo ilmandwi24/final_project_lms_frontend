@@ -27,6 +27,10 @@ import {
   SET_CART_ITEMS,
   GET_TOKEN_MIDTRANS,
   SET_TOKEN_MIDTRANS,
+  ADD_COURSE_TO_CART,
+  INCREMENT_CART_ITEMS,
+  DECREMENT_CART_ITEMS,
+  DELETE_COURSE_FROM_CART,
 } from '@containers/App/constants';
 
 export const setLocale = (locale) => ({
@@ -195,4 +199,22 @@ export const getTokenMidtrans = (payload) => ({
 export const setTokenMidtrans = (token) => ({
   type: SET_TOKEN_MIDTRANS,
   token,
+});
+
+export const addCourseToCart = (payload) => ({
+  type: ADD_COURSE_TO_CART,
+  payload,
+});
+
+export const incrementCartItems = () => ({
+  type: INCREMENT_CART_ITEMS,
+});
+export const decrementCartItems = () => ({
+  type: DECREMENT_CART_ITEMS,
+});
+
+export const deleteCourseFromCart = (cartId, courseId) => ({
+  type: DELETE_COURSE_FROM_CART,
+  cartId,
+  courseId,
 });

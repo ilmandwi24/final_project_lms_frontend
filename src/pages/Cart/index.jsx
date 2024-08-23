@@ -5,7 +5,8 @@ import { Box, Button, IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { selectCartItems, selectTokenMidtrans, selectUser } from '@containers/App/selectors';
 import { useEffect, useState } from 'react';
-import { getCartItems, getTokenMidtrans } from '@containers/App/actions';
+import { deleteCourseFromCart, getCartItems, getTokenMidtrans } from '@containers/App/actions';
+import { useNavigate } from 'react-router-dom';
 import styles from './style.module.scss';
 import defaultCover from '../../static/images/default-cover-course.png';
 
@@ -21,7 +22,7 @@ const formatCurrencyWithoutPrefix = (amount) => {
 };
 const Cart = ({ user, cartItems, tokenMidtrans }) => {
   const [token, setToken] = useState('');
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     // console.log(cartItems);
@@ -43,9 +44,17 @@ const Cart = ({ user, cartItems, tokenMidtrans }) => {
     };
   }, []);
 
+  const handleDelete = (cartId, courseId) => {
+    // console.log('delete', cartId, courseId);
+    dispatch(deleteCourseFromCart(cartId, courseId));
+    navigate('/cart');
+  };
+
   const handleCheckout = (cartId, price) => {
     // console.log(cartId, price);
-    dispatch(getTokenMidtrans({ cartId, price }));
+    if (!tokenMidtrans) {
+      dispatch(getTokenMidtrans({ cartId, price }));
+    }
     console.log(tokenMidtrans, 'snapToken');
     window.snap.pay(tokenMidtrans, {
       onSuccess: () => {
@@ -70,14 +79,19 @@ const Cart = ({ user, cartItems, tokenMidtrans }) => {
           <div className={styles.listItem}>
             <h5>{cartItems.count} courses in cart</h5>
 
-            {cartItems.list.data.length > 0 ? (
+            {cartItems.list?.data.length > 0 ? (
               cartItems.list.data.map((item, index) => (
                 <div className={styles.item} key={index}>
                   <img src={defaultCover} alt="" width="180px" />
                   <div className={styles.description}>
                     <h3>{item.name}</h3>
                     <p>Oleh {item.instructor_name}</p>
-                    <IconButton aria-label="delete" size="small" color="error">
+                    <IconButton
+                      aria-label="delete"
+                      size="small"
+                      color="error"
+                      onClick={() => handleDelete(item.cart_id, item.course_id)}
+                    >
                       <DeleteIcon size="small" />
                     </IconButton>
                   </div>
@@ -89,7 +103,7 @@ const Cart = ({ user, cartItems, tokenMidtrans }) => {
             ) : (
               <p>Cart is empty</p>
             )}
-            <div className={styles.item}>
+            {/* <div className={styles.item}>
               <img src={defaultCover} alt="" width="180px" />
               <div className={styles.description}>
                 <h3>Judul Course</h3>
@@ -98,7 +112,7 @@ const Cart = ({ user, cartItems, tokenMidtrans }) => {
               <div className={styles.price}>
                 <p>Rp. 100.000</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className={styles.checkout}>

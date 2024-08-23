@@ -88,6 +88,7 @@ const Login = () => {
           email: r.data.data.email,
           name: r.data.data.name,
           token: r.data.data.token,
+          cart_id: r.data.data.cart_id,
         };
         dispatch(setUser(userData));
         dispatch(setLogin(true));

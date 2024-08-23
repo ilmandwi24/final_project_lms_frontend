@@ -19,6 +19,8 @@ import {
   SET_JUMLAH_CART,
   SET_CART_ITEMS,
   SET_TOKEN_MIDTRANS,
+  INCREMENT_CART_ITEMS,
+  DECREMENT_CART_ITEMS,
 } from '@containers/App/constants';
 
 export const initialState = {
@@ -87,7 +89,6 @@ const appReducer = (state = initialState, action) =>
         draft.lessonsByCourse = action.lessons;
         break;
       case DELETE_LESSON:
-        console.log(action, 'action');
         draft.lessonsByCourse = draft.lessonsByCourse.filter(
           (lesson) => lesson.id !== action.lessonId && lesson.courseId !== action.courseId
         );
@@ -109,6 +110,11 @@ const appReducer = (state = initialState, action) =>
         // console.log(action, 'action');
         draft.token = action.token;
         break;
+      case INCREMENT_CART_ITEMS:
+        draft.jumlahCartItem += 1;
+        break;
+      case DECREMENT_CART_ITEMS:
+        draft.jumlahCartItem -= 1;
     }
   });
 

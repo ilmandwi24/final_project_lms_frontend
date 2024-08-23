@@ -70,3 +70,11 @@ export const getCartItems = (userId) =>
   callAPI(`${urls.backend}/api/carts/users/${userId}`, 'get', {});
 
 export const getTokenMidtrans = (payload) => callAPI(`${urls.backend}/api/midtrans/get-token`, 'post', {}, {}, payload);
+
+export const addCourseToCart = (payload) =>
+  // callAPI(`${urls.backend}/api/courses/instructors/${payload.id}`, 'get', {});
+  callAPI(`${urls.backend}/api/carts/cartitems/`, 'post', {}, {}, payload);
+
+export const deleteCourseFromCart = (cartId, courseId) => {
+  callAPI(`${urls.backend}/api/carts/${cartId}/courses/${courseId}`, 'delete', {}, {}, {});
+};
